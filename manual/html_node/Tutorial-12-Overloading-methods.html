@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+This manual is for GNU Java Training Wheels (version 2.0,
+25 July 2016), which is a system for making it easier for novices
+to learn to program in the Java language.
+
+Copyright (C) 2016 Davin Pearson.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+Texts.  A copy of the license is included in the section entitled
+"GNU Free Documentation License". -->
+<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>GNU Java Training Wheels 2.0: Tutorial 12 Overloading methods</title>
+
+<meta name="description" content="GNU Java Training Wheels 2.0: Tutorial 12 Overloading methods">
+<meta name="keywords" content="GNU Java Training Wheels 2.0: Tutorial 12 Overloading methods">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" rel="up" title="J.T.W. Tutorials">
+<link href="Tutorial-13-More-about-references.html#Tutorial-13-More-about-references" rel="next" title="Tutorial 13 More about references">
+<link href="Tutorial-11-References-to-another-class.html#Tutorial-11-References-to-another-class" rel="prev" title="Tutorial 11 References to another class">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.indentedblock {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style:oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nocodebreak {white-space:nowrap}
+span.nolinebreak {white-space:nowrap}
+span.roman {font-family:serif; font-weight:normal}
+span.sansserif {font-family:sans-serif; font-weight:normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="/software/gnulib/manual.css">
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+<a name="Tutorial-12-Overloading-methods"></a>
+<div class="header">
+<p>
+Next: <a href="Tutorial-13-More-about-references.html#Tutorial-13-More-about-references" accesskey="n" rel="next">Tutorial 13 More about references</a>, Previous: <a href="Tutorial-11-References-to-another-class.html#Tutorial-11-References-to-another-class" accesskey="p" rel="prev">Tutorial 11 References to another class</a>, Up: <a href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" accesskey="u" rel="up">J.T.W. Tutorials</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Tutorial-12-Overloading-methods-1"></a>
+<h3 class="section">4.12 Tutorial 12 Overloading methods</h3>
+
+
+<p>Question 4.12.1: Write constructors for the classes SportsShoe and
+Runner below, by looking at the main function to see how many
+arguments each constructor has.
+</p>
+<div class="example">
+<pre class="example">class SportsShoe
+begin
+
+&nbsp;&nbsp;&nbsp; property String model;      // what kind of shoe it is
+&nbsp;&nbsp;&nbsp; property double speedBoost; // the boosting factor of the shoe
+
+&nbsp;&nbsp;&nbsp; // constructor goes here:
+
+&nbsp;&nbsp;&nbsp; // Useful method for debugging
+&nbsp;&nbsp;&nbsp; public method String toString()
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return &quot;I am a shoe called &quot; + model + &quot; and my boosting factor is &quot; + speedBoost;
+&nbsp;&nbsp;&nbsp; end
+end
+
+class Runner
+begin
+&nbsp;&nbsp;&nbsp; private property String     name;  // Runner's name.
+&nbsp;&nbsp;&nbsp; private property int        speed; // speed of runner in km/hr.
+&nbsp;&nbsp;&nbsp; private property SportsShoe shoes; // which shoe they are wearing.
+
+&nbsp;&nbsp;&nbsp; // constructor goes here:
+
+&nbsp;&nbsp;&nbsp; // Useful method for debugging
+&nbsp;&nbsp;&nbsp; public method String toString()
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return &quot;I am a runner and my name is &quot; + name + &quot; and my shoes are &quot; + shoes;
+&nbsp;&nbsp;&nbsp; end
+&nbsp;&nbsp;&nbsp; /**
+&nbsp;&nbsp;&nbsp; *** This private method computeSpeed works out the runners speed,
+&nbsp;&nbsp;&nbsp; *** based on their basic speed and the speed boost due to the
+&nbsp;&nbsp;&nbsp; *** SportsShoe that they are currently wearing.
+&nbsp;&nbsp;&nbsp; */
+
+&nbsp;&nbsp;&nbsp; // method goes here:
+
+
+&nbsp;&nbsp;&nbsp; /**
+&nbsp;&nbsp;&nbsp; ** Prints the result of racing two runners against each other.
+&nbsp;&nbsp;&nbsp; */
+&nbsp;&nbsp;&nbsp; function void race(Runner r1, Runner r2)
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (r1.computeSpeed()&gt;r2.computeSpeed())
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; then begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;Runner &quot; + r1.name + &quot; beats &quot; + r2.name);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; end
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; else begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;Runner &quot; + r2.name + &quot; beats &quot; + r1.name);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; end
+&nbsp;&nbsp;&nbsp; end
+&nbsp;&nbsp;&nbsp; /**
+&nbsp;&nbsp;&nbsp; ** Swaps the shoes of two runners.
+&nbsp;&nbsp;&nbsp; */
+&nbsp;&nbsp;&nbsp; function void swapShoes(Runner r1, Runner r2)
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var SportsShoe tempShoe = r1.shoes;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; r1.shoes = r2.shoes;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; r2.shoes = tempShoe;
+&nbsp;&nbsp;&nbsp; end
+end
+
+class RunnerTest
+begin
+&nbsp;&nbsp;&nbsp; beginMain
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var SportsShoe nike    = new SportsShoe(&quot;Nike NX-71&quot;, 2.0);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var SportsShoe reebock = new SportsShoe(&quot;Reebock R20&quot;, 2.3);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var SportsShoe puma    = new SportsShoe(&quot;Puma P200-MMX&quot;,4.8);
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var Runner sg = new Runner(&quot;Speedy Gonzalez&quot;, 55, nike);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var Runner sw = new Runner(&quot;Slick Willy&quot;, 49, reebock);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var Runner fa = new Runner(&quot;Fat Albert&quot;, 15, puma);
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Runner.race(sg,sw);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // Runner.race(sg,sw,fa);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // sg.raceAgainst(sw);
+&nbsp;&nbsp;&nbsp; endMain
+end
+</pre></div>
+
+<p>Question 4.12.2: In the Runner class, write the private method
+computeSpeed that has no arguments and returns a double-precision
+floating point value that equals the runner&rsquo;s running speed. Note that
+the speed of a runner is determined by multiplying their speed
+property with the speedBoost property of the shoes that they are
+wearing. For example, Speedy Gonzalez&rsquo;s running speed = 55 * 2.0 =
+110.0.
+</p>
+<p>Question 4.12.3: Fix the race method so that it checks for a draw.
+</p>
+<p>Question 4.12.4: By copying the race method, write a three-parameter
+race method for racing three runners against each other. Two methods
+in the same class with the same name is called overloading in
+J.T.W. and Java. Add a call to this method from the main function.
+</p>
+<a name="index-Overloading-methods"></a>
+<a name="index-Methods_002c-overloading"></a>
+
+<p>Question 4.12.5: What is the difference between a method and a
+function?  Write a one parameter method raceAgainst that behaves
+exactly like two-parameter function race. There are two ways of doing
+this, one is to optionally use the this keyword rather than one of the
+parameters r1 or r2. The second way is for race to simply call race
+using this as one of the arguments to the function.
+</p>
+<a name="index-Converting-from-functions-to-methods-and-vice_002dversa"></a>
+<a name="index-Functions-to-methods-and-vice_002dversa"></a>
+<a name="index-Methods-to-functions-and-vice_002dversa"></a>
+
+<p>Question 4.12.6: Is it true that any method can be re-worked into a
+function and vice versa?
+</p>
+<a name="index-Swapping-the-properties-of-two-objects"></a>
+<a name="index-Property-swapping"></a>
+
+<p>Question 4.12.7: The swapShoes method in the Runner class swaps the
+shoes of two runners. Add some code to the main function to swap the
+shoes of two runners and verify that the shoes do indeed get swapped.
+</p>
+<p>Question 4.12.8: Write a method called swapNames that swaps the
+names of two runners. You can put this function into any class but it
+makes the most sense to put it into the Runner class since it has
+two Runner parameters.
+</p>
+<p>Question 4.12.9: Write a method swapSpeeds that swaps the speed
+properties of two runners.
+</p>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Tutorial-13-More-about-references.html#Tutorial-13-More-about-references" accesskey="n" rel="next">Tutorial 13 More about references</a>, Previous: <a href="Tutorial-11-References-to-another-class.html#Tutorial-11-References-to-another-class" accesskey="p" rel="prev">Tutorial 11 References to another class</a>, Up: <a href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" accesskey="u" rel="up">J.T.W. Tutorials</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

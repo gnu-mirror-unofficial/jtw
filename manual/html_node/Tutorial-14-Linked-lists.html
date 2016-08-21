@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+This manual is for GNU Java Training Wheels (version 2.0,
+25 July 2016), which is a system for making it easier for novices
+to learn to program in the Java language.
+
+Copyright (C) 2016 Davin Pearson.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+Texts.  A copy of the license is included in the section entitled
+"GNU Free Documentation License". -->
+<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>GNU Java Training Wheels 2.0: Tutorial 14 Linked lists</title>
+
+<meta name="description" content="GNU Java Training Wheels 2.0: Tutorial 14 Linked lists">
+<meta name="keywords" content="GNU Java Training Wheels 2.0: Tutorial 14 Linked lists">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" rel="up" title="J.T.W. Tutorials">
+<link href="Tutorial-15-Introducing-inheritance.html#Tutorial-15-Introducing-inheritance" rel="next" title="Tutorial 15 Introducing inheritance">
+<link href="Tutorial-13-More-about-references.html#Tutorial-13-More-about-references" rel="prev" title="Tutorial 13 More about references">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.indentedblock {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style:oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nocodebreak {white-space:nowrap}
+span.nolinebreak {white-space:nowrap}
+span.roman {font-family:serif; font-weight:normal}
+span.sansserif {font-family:sans-serif; font-weight:normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="/software/gnulib/manual.css">
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+<a name="Tutorial-14-Linked-lists"></a>
+<div class="header">
+<p>
+Next: <a href="Tutorial-15-Introducing-inheritance.html#Tutorial-15-Introducing-inheritance" accesskey="n" rel="next">Tutorial 15 Introducing inheritance</a>, Previous: <a href="Tutorial-13-More-about-references.html#Tutorial-13-More-about-references" accesskey="p" rel="prev">Tutorial 13 More about references</a>, Up: <a href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" accesskey="u" rel="up">J.T.W. Tutorials</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Tutorial-14-Linked-lists-1"></a>
+<h3 class="section">4.14 Tutorial 14 Linked lists</h3>
+
+<a name="index-Yertle-the-Turtle"></a>
+<a name="index-Linked-lists-1"></a>
+
+<p>Dr Seuss&rsquo; story <a href="https://en.wikipedia.org/wiki/Yertle_the_Turtle">&ldquo;Yertle the Turtle&rdquo;</a> describes how a turtle called Yertle sits
+at the top of a pile of other turtles. In this example, the pile of
+turtles is represented by a linked list of Turtle objects, with the
+down property serving to connect one Turtle object to another. If
+a Turtle object has a non-null down property, then this represents
+the fact that it is sitting on top of another turtle. The last turtle
+in the linked list is the turtle that is at the bottom of the pile,
+which has a null value for its down property.  Note that you cannot
+use the superfor construct for iterating through a linked list.  In
+this case the for construct is the most sensible.
+</p>
+<p>Question 4.14.1: Study, compile and run the following code:
+</p>
+<div class="example">
+<pre class="example">class Turtle
+begin
+
+&nbsp;&nbsp;&nbsp; private property String     name;   // Turtle's name
+&nbsp;&nbsp;&nbsp; private property int        age;    // Turtle's age in years
+&nbsp;&nbsp;&nbsp; private property double     weight; // Turtle's weight in kg
+
+&nbsp;&nbsp;&nbsp; // NOTE: this property allows for linked lists
+&nbsp;&nbsp;&nbsp; property Turtle down;
+
+&nbsp;&nbsp;&nbsp; constructor Turtle(String aName, int anAge, double aWeight)
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; name   = aName;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; age    = anAge;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; weight = aWeight;
+&nbsp;&nbsp;&nbsp; end
+
+&nbsp;&nbsp;&nbsp; /** Getter method for name property */
+&nbsp;&nbsp;&nbsp; method String getName()
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return name;
+&nbsp;&nbsp;&nbsp; end
+
+&nbsp;&nbsp;&nbsp; /** Useful method for debugging */
+&nbsp;&nbsp;&nbsp; public method String toString()
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return name;
+&nbsp;&nbsp;&nbsp; end
+end
+
+class TurtleTest
+begin
+&nbsp;&nbsp;&nbsp; beginMain
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var Turtle yertle = new Turtle(&quot;Yertle&quot;, 103, 20);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var Turtle zippy  = new Turtle(&quot;Zippy&quot;,  102, 30);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var Turtle bungle = new Turtle(&quot;Bungle&quot;, 101, 40);
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // *** see later
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; yertle.down = zippy;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; zippy.down = bungle;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; bungle.down  = null; // NOTE: not needed as bungle.down is null by default
+
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var int totalWeight = 0;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // NOTE: demonstrates how to iterate through a linked list:
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; for (var Turtle current = yertle; current != null; current=current.down)
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; totalWeight = totalWeight + current.getWeight();
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; end
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;The total weight is &quot; + totalWeight);
+&nbsp;&nbsp;&nbsp; endMain
+end
+</pre></div>
+
+<p>The code in the main function after the *** sets down the
+following relationships between the three Turtle objects (Yertle,
+Bungle and Zippy). The following diagram shows the relationship
+between the different turtles. When you traverse the list of turtles
+you must always start at the top turtle (known as the head of the
+linked list). If you give a different value for the top turtle,
+your code will think that the given turtle is the one at the top of
+the pile and you will get the wrong result.
+</p>
+<pre class="verbatim">+------+
+|Yertle|
++------+----+
+            |
++------+&lt;---+
+|Zippy |
++------+----+
+            |
++------+&lt;---+
+|Bungle|
++------+----+
+            |
+    null&lt;---+
+
+</pre>
+<p>Question 4.14.2: Move the code for calculating the total weight of the
+turtles from the main function to a function called function void
+printTotalWeight(Turtle bottom) in the Turtle class that prints out
+the total weight of the turtles. Then call that function from the main
+function to get the same result as before. Note that that if
+printTotalWeight was a method then calling that method using null
+(representing an empty list) like so: null.printTotalWeight()
+would be an error, whereas Turtle.printTotalWeight(null) wouldn&rsquo;t
+be and therefore is better. This is one example of how methods and
+functions differ.
+</p>
+<p>Question 4.14.3: Revision question for getters. By copying the pattern
+established by the getName method, add two getter methods to the
+Turtle class: getAge which returns the current turtle&rsquo;s age and
+getWeight which returns the current turtle&rsquo;s weight. Then call
+these methods on the Yertle object in the main function. Note that the
+toString method would be more appropriate as it handles nulls
+better but you know that the yertle reference is not null so you know
+it is safe to call the getAge and getWeight methods on the
+yertle reference.
+</p>
+<p>Question 4.14.4: Write a function Turtle findBottomTurtle(Turtle top) that
+returns the Turtle object that is at the top of the pile, and returns
+null if there isn&rsquo;t one.
+</p>
+<p>Question 4.14.5: Then call this function from the main function using
+System.out.println() and the top turtle Yertle.
+</p>
+<p>Question 4.14.6: Write a function Turtle findOldestTurtle(Turtle top)
+that returns the oldest turtle or null if there isn&rsquo;t one.
+</p>
+<p>Question 4.14.7:Then call this function from the main function using
+System.out.println() and the top turtle Yertle.
+</p>
+<p>Question 4.14.8: Write a function Turtle
+findHeaviestTurtle(Turtle top) returns the heaviest turtle, or null
+if there isn&rsquo;t one.
+</p>
+<p>Question 4.14.9: Then call this function from the main
+function using System.out.println() and the top turtle Yertle.
+</p>
+<p>Question 4.14.10: Write a function sayPile(Turtle top) that prints
+the names of the turtles in the pile starting from the top turtle and
+finishing at the bottom turtle. Then call this function from the main
+function.
+</p>
+<p>Question 4.14.11: Under what circumstances would it be okay to change
+the visibility of the down property to private, like the name, age
+and weight properties?
+</p>
+<p>Question 4.14.12: Add an extra parameter to the constructor which is a
+reference the to the turtle on below the current one. Then remove all
+occurrences of the down property from the main function.  Note that
+you will need to reverse the order that the turtles are created so the
+bottom turtle is constructed first and so on.  The advantage of this
+is that it enables you to change the visibility of the down
+property to private.
+</p>
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Tutorial-15-Introducing-inheritance.html#Tutorial-15-Introducing-inheritance" accesskey="n" rel="next">Tutorial 15 Introducing inheritance</a>, Previous: <a href="Tutorial-13-More-about-references.html#Tutorial-13-More-about-references" accesskey="p" rel="prev">Tutorial 13 More about references</a>, Up: <a href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" accesskey="u" rel="up">J.T.W. Tutorials</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+This manual is for GNU Java Training Wheels (version 2.0,
+25 July 2016), which is a system for making it easier for novices
+to learn to program in the Java language.
+
+Copyright (C) 2016 Davin Pearson.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+Texts.  A copy of the license is included in the section entitled
+"GNU Free Documentation License". -->
+<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>GNU Java Training Wheels 2.0: Tutorial 10 Object arrays</title>
+
+<meta name="description" content="GNU Java Training Wheels 2.0: Tutorial 10 Object arrays">
+<meta name="keywords" content="GNU Java Training Wheels 2.0: Tutorial 10 Object arrays">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" rel="up" title="J.T.W. Tutorials">
+<link href="Tutorial-11-References-to-another-class.html#Tutorial-11-References-to-another-class" rel="next" title="Tutorial 11 References to another class">
+<link href="Tutorial-9-Mapping-class-variables-to-instance-variables-_0028also-known-as-properties_0029-and-functions-to-methods.html#Tutorial-9-Mapping-class-variables-to-instance-variables-_0028also-known-as-properties_0029-and-functions-to-methods" rel="prev" title="Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.indentedblock {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style:oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nocodebreak {white-space:nowrap}
+span.nolinebreak {white-space:nowrap}
+span.roman {font-family:serif; font-weight:normal}
+span.sansserif {font-family:sans-serif; font-weight:normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="/software/gnulib/manual.css">
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+<a name="Tutorial-10-Object-arrays"></a>
+<div class="header">
+<p>
+Next: <a href="Tutorial-11-References-to-another-class.html#Tutorial-11-References-to-another-class" accesskey="n" rel="next">Tutorial 11 References to another class</a>, Previous: <a href="Tutorial-9-Mapping-class-variables-to-instance-variables-_0028also-known-as-properties_0029-and-functions-to-methods.html#Tutorial-9-Mapping-class-variables-to-instance-variables-_0028also-known-as-properties_0029-and-functions-to-methods" accesskey="p" rel="prev">Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods</a>, Up: <a href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" accesskey="u" rel="up">J.T.W. Tutorials</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Tutorial-10-Object-arrays-1"></a>
+<h3 class="section">4.10 Tutorial 10 Object arrays</h3>
+
+
+
+
+<p>This tutorial teaches you how to create single-dimensional and
+multi-dimensional arrays of Objects. The Object types are all
+types execept for boolean, char, int, float and double. A helpful
+convention in Java is that the Object types start with an uppercase
+letter, while non-Object types start with a lowercase letter, such as
+for example the String class as an example of an Object type. In
+addition to this, two different array initialization syntaxes are
+presented.
+</p>
+<a name="index-Arrays-1"></a>
+<a name="index-Object-arrays"></a>
+<a name="index-Arrays-of-Object-type_002c-single_002ddimensional"></a>
+<a name="index-Single_002ddimensional-arrays-of-Objects"></a>
+
+<a name="Single_002ddimensional-arrays-of-Objects"></a>
+<h4 class="subsection">4.10.1 Single-dimensional arrays of Objects</h4>
+
+<p>Question 4.10.1: Here is an example of a convenient one-dimensional
+array initialization syntax.  Study, compile and run the following
+code.  The code Person[] should be read out loud as &ldquo;person
+array&rdquo; indicating the variable a is a person array, also known as
+an &ldquo;array of persons&rdquo;.
+</p>
+<div class="example">
+<pre class="example">class Person
+begin
+&nbsp;&nbsp;&nbsp; private property String name;
+
+&nbsp;&nbsp;&nbsp; constructor Person(String aName)
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; name = aName;
+&nbsp;&nbsp;&nbsp; end
+
+&nbsp;&nbsp;&nbsp; public String toString()
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return name;
+&nbsp;&nbsp;&nbsp; end
+end
+
+class PersonTest
+begin
+&nbsp;&nbsp;&nbsp; beginMain
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; var Person[] a = { new Person(&quot;Person # 1&quot;), new Person(&quot;Person # 2&quot;), new Person(&quot;Person # 3&quot;) };
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; superfor (var int i=0 to a.length-1)
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;a[&quot; + i + &quot;]=&quot; + a[i]);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; end
+&nbsp;&nbsp;&nbsp; endMain
+end
+</pre></div>
+
+<a name="index-Arrays-of-Object-type_002c-initialization"></a>
+<a name="index-Arrays-of-Object-type_002c-first-initialization-syntax"></a>
+<a name="index-First-initialization-syntax-for-arrays-of-Objects"></a>
+
+<p>Due to a design oversight by the creators of Java you cannot use this
+syntax to re-initialize an array like so:
+</p>
+<div class="example">
+<pre class="example">// Compilation error
+a = { new Person(&quot;Person # 4&quot;), new Person(&quot;Person # 5&quot;), new Person(&quot;Person # 6&quot;), new Person(&quot;Person # 7&quot;) };
+</pre></div>
+
+<p>Luckily there is a way array around this oversight and that is to use
+a design pattern where you introduce a temporary variable like so:
+</p>
+<div class="example">
+<pre class="example">// No error
+var Person[] temp = { new Person(&quot;Person # 4&quot;), new Person(&quot;Person # 5&quot;), new Person(&quot;Person # 6&quot;), new Person(&quot;Person # 7&quot;) };
+a = temp; // Array &quot;a&quot; now holds Person # 4,Person # 5,Person # 6,Person # 7
+</pre></div>
+
+<p>Later you will learn why this design pattern is useful for
+re-initializing multi-dimensional arrays.
+</p>
+<p>Question 4.10.2: Write a function in the class PersonTest called
+print that takes a Person array argument and prints out the
+array. You will need to use the length property of the array parameter
+so your function works with arbitrary sized arrays. Change the main
+function to what follows so that it contains a call to the printx
+function.
+</p>
+<div class="example">
+<pre class="example">var Person[] a = { new Person(&quot;Person # 1&quot;), new Person(&quot;Person # 2&quot;), new Person(&quot;Person # 3&quot;)};
+print(a);
+</pre></div>
+
+<p>Question 4.10.3: Write your own class called Mine similar to the Person
+class with a one int parameter constructor, a private int property p
+and a toString method that converts p to a string. Then write a
+function in the PersonTest class with same name as the previous print
+function, except that this one takes a Mine[], also known as a Mine
+array. You might recall from Tutorial 7 that this practice of having
+two functions with the same name is called function name
+overloading. Change the main function to what follows so that it
+initializes an array of Mine point variables and then calls the second
+print function.
+</p>
+<div class="example">
+<pre class="example">var Mine[] b = { new Mine(1), new Mine(2), new Mine(3) };
+print(b);
+</pre></div>
+
+<a name="index-Arrays-of-Object-type_002c-second-initialization-syntax"></a>
+<a name="index-Second-initialization-syntax-for-arrays-of-Objects"></a>
+
+<p>Here is an example of a second initialisation syntax. For this
+particular example it is better to use the simpler, earlier
+initialisation syntax, but when the size of the array to be created is
+to be determined at run-time, then the second syntax should used. The
+next question will show you an example of this.
+</p>
+<div class="example">
+<pre class="example">beginMain
+&nbsp;&nbsp;&nbsp; var Person[] a = new Person[3];
+&nbsp;&nbsp;&nbsp; // at this point the array is all nulls
+&nbsp;&nbsp;&nbsp; superfor (var int i=0 to a.length-1)
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; a[i] = new Person(&quot;Person # &quot; + (i+1));
+&nbsp;&nbsp;&nbsp; end
+&nbsp;&nbsp;&nbsp; print(a);
+endMain
+</pre></div>
+
+<p>Question 4.10.4: Write a function create takes one int argument, the
+size of the array to create and returns a Person array of that
+size. Make it so the ith element of the array is initialised to
+&quot;Person # &quot; + i. Call this function from the main function like so:
+</p>
+<div class="example">
+<pre class="example">beginMain
+&nbsp;&nbsp;&nbsp; var Person[] a = create(3);
+&nbsp;&nbsp;&nbsp; print(a);
+endMain
+</pre></div>
+
+<p>Question 4.10.5: Write a function create2 takes one int argument, the
+size of the array to create and returns a Mine array of that
+size. Make it so the ith element of the array&rsquo;s toString method prints
+out &quot;Mine # &quot; + i. Why is it not possible to overload that create
+function? Try it and see what the compiler says. Call create2 from the
+main function like so:
+</p>
+<div class="example">
+<pre class="example">beginMain
+&nbsp;&nbsp;&nbsp; var Mine[] a = create2(3);
+&nbsp;&nbsp;&nbsp; print(a);
+endMain
+</pre></div>
+
+<p>Question 4.10.6: Write a function doubler that takes a Person array x
+and returns a new Person array called result twice as big as x. Copy x
+into the result before you return it. The extra elements in result
+should all be null.
+</p>
+<p>Question 4.10.7: Change the doubler function so that every null in the
+array result is set to a new Person make it so that every new Person
+Object has a different name property.
+</p>
+<a name="Two_002ddimensional-arrays-of-Objects"></a>
+<h4 class="subsection">4.10.2 Two-dimensional arrays of Objects</h4>
+
+<a name="index-Two_002ddimensional-arrays-of-Objects"></a>
+<a name="index-Arrays-of-Object-type_002c-two_002ddimensional"></a>
+<a name="index-Object-arrays_002c-two_002ddimensional"></a>
+
+<p>Question 4.10.8: Here is an example of a convenient two dimensional
+array initialization syntax. Study, compile and run the following
+code. The code Person[][] should be read out loud as person array
+array indicating the variable a is a person array array, also
+known as a two-dimensional array of persons.
+</p>
+<div class="example">
+<pre class="example">beginMain
+&nbsp;&nbsp;&nbsp; var Person[][] a = { { new Person(&quot;Person # 1&quot;), new Person(&quot;Person # 2&quot;), new Person(&quot;Person # 3&quot;) },
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; { new Person(&quot;Person # 4&quot;), new Person(&quot;Person # 5&quot;) },
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; { new Person(&quot;Person # 6&quot;) } };
+
+&nbsp;&nbsp;&nbsp; superfor (var int y=0 to a.length-1)
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; superfor (var int x=0; to a[y].length-1)
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.print(&quot; &quot; + a[y][x]);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; end
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println();
+&nbsp;&nbsp;&nbsp; end
+endMain
+</pre></div>
+
+<p>Question 4.10.9: By copying the pattern of the code above, do some more
+overloading of the print function by writing two new print functions,
+one taking a two dimensional array of Person, the other taken a two
+dimensional array of Mine. The call both of these functions from the
+main function.
+</p>
+<p>Since a[0] is a Person array,you would naively expect it to be able to
+be re-initialised like so:
+</p>
+<div class="example">
+<pre class="example">a[0] = { new Person(&quot;Person # 4&quot;),
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; new Person(&quot;Person # 5&quot;),
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; new Person(&quot;Person # 6&quot;) };
+</pre></div>
+
+<p>so that after this code a0 holds the four element long array Person
+#4,Person #5 and Person #6, but it does&rsquo;t work owing to a
+design oversight by the creators of Java. Luckily as mentioned above
+there is a way around this oversight and that is to use a temporary
+variable like so:
+</p>
+<div class="example">
+<pre class="example">var Person[] temp = { new Person(&quot;Person # 4&quot;),
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; new Person(&quot;Person # 5&quot;),
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; new Person(&quot;Person # 6&quot;) };
+a[0] = temp; // Array &quot;a[0]&quot; now holds Person # 4,Person # 5,Person # 6
+</pre></div>
+
+<p>Like with one-dimensional arrays, there is a second initialization
+syntax for two-dimensional arrays and here it is. Unlike the above
+code the sub-arrays a[0],a[1] and a[2] are all of equal
+size, namely three.
+</p>
+<div class="example">
+<pre class="example">beginMain
+&nbsp;&nbsp;&nbsp; var Person[][] a = new Person[3][3];
+&nbsp;&nbsp;&nbsp; a[0][0] = new Person(&quot;Person # 1&quot;);
+&nbsp;&nbsp;&nbsp; a[0][1] = new Person(&quot;Person # 2&quot;);
+&nbsp;&nbsp;&nbsp; a[0][2] = new Person(&quot;Person # 3&quot;);
+&nbsp;&nbsp;&nbsp; a[1][0] = new Person(&quot;Person # 4&quot;);
+&nbsp;&nbsp;&nbsp; a[1][1] = new Person(&quot;Person # 5&quot;);
+&nbsp;&nbsp;&nbsp; a[1][2] = new Person(&quot;Person # 6&quot;);
+&nbsp;&nbsp;&nbsp; a[2][0] = new Person(&quot;Person # 7&quot;);
+&nbsp;&nbsp;&nbsp; a[2][1] = new Person(&quot;Person # 8&quot;);
+&nbsp;&nbsp;&nbsp; a[2][2] = new Person(&quot;Person # 9&quot;);
+endMain
+</pre></div>
+
+<p>Question 4.10.10: Write a function create3 and create4
+that takes an int argument size and returns a two-dimensional array of
+Person or Mine, respectively. Make is so that each Person or
+Mine Object has its own number, using a separate counter
+variable var int count.
+</p>
+<a name="Three_002ddimensional-arrays-of-Objects"></a>
+<h4 class="subsection">4.10.3 Three-dimensional arrays of Objects</h4>
+
+<a name="index-Three_002ddimensional-arrays-of-Objects"></a>
+<a name="index-Arrays-of-Object-type_002c-three_002ddimensional"></a>
+
+<p>Question 4.10.11: Using the knowledge you have gained so far about
+arrays, create, initialize and print a three-dimensional array of
+Persons. Make it so that each Person Object is given its
+own number using a separate counter variable var int count.
+</p>
+
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Tutorial-11-References-to-another-class.html#Tutorial-11-References-to-another-class" accesskey="n" rel="next">Tutorial 11 References to another class</a>, Previous: <a href="Tutorial-9-Mapping-class-variables-to-instance-variables-_0028also-known-as-properties_0029-and-functions-to-methods.html#Tutorial-9-Mapping-class-variables-to-instance-variables-_0028also-known-as-properties_0029-and-functions-to-methods" accesskey="p" rel="prev">Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods</a>, Up: <a href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" accesskey="u" rel="up">J.T.W. Tutorials</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

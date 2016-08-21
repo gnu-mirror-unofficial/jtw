@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+This manual is for GNU Java Training Wheels (version 2.0,
+25 July 2016), which is a system for making it easier for novices
+to learn to program in the Java language.
+
+Copyright (C) 2016 Davin Pearson.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+Texts.  A copy of the license is included in the section entitled
+"GNU Free Documentation License". -->
+<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>GNU Java Training Wheels 2.0: Tutorial 5 A beer drinking song</title>
+
+<meta name="description" content="GNU Java Training Wheels 2.0: Tutorial 5 A beer drinking song">
+<meta name="keywords" content="GNU Java Training Wheels 2.0: Tutorial 5 A beer drinking song">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" rel="up" title="J.T.W. Tutorials">
+<link href="Tutorial-6-Class-variables.html#Tutorial-6-Class-variables" rel="next" title="Tutorial 6 Class variables">
+<link href="Tutorial-4-Four-looping-constructs.html#Tutorial-4-Four-looping-constructs" rel="prev" title="Tutorial 4 Four looping constructs">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.indentedblock {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style:oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nocodebreak {white-space:nowrap}
+span.nolinebreak {white-space:nowrap}
+span.roman {font-family:serif; font-weight:normal}
+span.sansserif {font-family:sans-serif; font-weight:normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="/software/gnulib/manual.css">
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+<a name="Tutorial-5-A-beer-drinking-song"></a>
+<div class="header">
+<p>
+Next: <a href="Tutorial-6-Class-variables.html#Tutorial-6-Class-variables" accesskey="n" rel="next">Tutorial 6 Class variables</a>, Previous: <a href="Tutorial-4-Four-looping-constructs.html#Tutorial-4-Four-looping-constructs" accesskey="p" rel="prev">Tutorial 4 Four looping constructs</a>, Up: <a href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" accesskey="u" rel="up">J.T.W. Tutorials</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Tutorial-5-A-beer-drinking-song-1"></a>
+<h3 class="section">4.5 Tutorial 5 A beer drinking song</h3>
+
+<p>Question 4.5.1: Study the following code and then compile and run it to
+verify that it prints out the lyrics to a popular song:
+</p>
+<a name="index-Beer-drinking-song"></a>
+
+<div class="example">
+<pre class="example">class BeerSong
+begin
+&nbsp;&nbsp;&nbsp; beginMain
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;Five bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;Five bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;If one bottle of beer should accidentally fall,&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;there'd be four bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println();
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;Four bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;Four bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;If one bottle of beer should accidentally fall,&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;there'd be three bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println();
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;Three bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;Three bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;If one bottle of beer should accidentally fall,&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;there'd be two bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println();
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;Two bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;Two bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;If one bottle of beer should accidentally fall,&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;There'd be one bottle of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println();
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;One bottle of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;One bottle of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;If one bottle of beer should accidentally fall,&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;there'd be no bottles of beer on the wall.&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println();
+&nbsp;&nbsp;&nbsp; endMain
+end
+</pre></div>
+
+<p>Question 4.5.2: The following is the first attempt to make the code
+smaller but to keep the same output: If you compile and run the
+following code you will notice that it counts up from one rather than
+down from n. Change the for loop so that it runs down rather than
+up. For information about how to write the for loop, please consult
+Tutorial 4.2.
+</p>
+<div class="example">
+<pre class="example">class BeerSong
+begin
+&nbsp;&nbsp;&nbsp; function song(int n)
+&nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; superfor (var int i=1 to n)
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; begin
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(i + &quot; bottles of beer on the wall&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(i + &quot; bottles of beer on the wall&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;If one bottle of beer should accidentally fall,&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(&quot;there'd be &quot; + (i-1) + &quot; bottles of beer on the wall&quot;);
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println();
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; end
+&nbsp;&nbsp;&nbsp; end
+
+&nbsp;&nbsp;&nbsp; beginMain
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; song(5);
+&nbsp;&nbsp;&nbsp; endMain
+end
+</pre></div>
+
+<p>Question 4.5.3: Finish the number2string function below and add a
+new function call to this function in the song function so that it
+print textual numbers rather than digits.
+</p>
+<div class="example">
+<pre class="example">function String number2string(int n)
+begin
+&nbsp;&nbsp;&nbsp; assert n&gt;=0 : n;
+&nbsp;&nbsp;&nbsp; assert n&lt;=10: n;
+&nbsp;&nbsp;&nbsp; if (n == 0) then return &quot;no&quot;;
+&nbsp;&nbsp;&nbsp; if (n == 1) then return &quot;one&quot;;
+&nbsp;&nbsp;&nbsp; if (n == 2) then return &quot;two&quot;;
+&nbsp;&nbsp;&nbsp; /* rest of code goes here */
+&nbsp;&nbsp;&nbsp; if (n == 9) then return &quot;nine&quot;;
+&nbsp;&nbsp;&nbsp; if (n == 10) then return &quot;ten&quot;;
+&nbsp;&nbsp;&nbsp; assert false;
+end
+</pre></div>
+
+<p>Question 4.5.4: Add a new function String capitalize(String s)
+that capitalizes the first word in a String and call this function
+from the song function so that the first words in each sentence are
+capitalized. You should find the function Character.toUpperCase
+and the methods charAt and substring in the package
+java.lang helpful for writing this function. See the class String
+in the package java.lang at
+<a href="http://docs.oracle.com/javase/1.5.0/docs/api">http://docs.oracle.com/javase/1.5.0/docs/api</a> for more details.
+</p>
+<p>Question 4.5.5: Add new function call String plural(int n) that
+returns the string &quot;s&quot; if n is not equal to 1 and the empty string &quot;&quot;
+otherwise. Then call this function from the song function so that the
+phrase &quot;bottle&quot; is pluralized when it should be.
+</p>
+<p>Question 4.5.6: Write a function called number2string2 that can
+handle values up to but not including 100. Note that you will need
+multiple if ... then statements to achieve this. Note that if n
+is a number then the following expressions are useful:
+</p>
+<div class="example">
+<pre class="example">&nbsp;&nbsp;&nbsp;  var int temp1 = n / 10 % 10 results in temp1 holding the tens digit of n and is zero in the case that n&lt;10.
+&nbsp;&nbsp;&nbsp;  var int temp2 = n % 10 results in temp2 holding the ones digit of n.
+</pre></div>
+
+<p>Also make it print out &quot;one hundred or more&quot; in the case that n&gt;=100
+</p>
+<p>Question 4.5.7: Change the song function so that the following function
+call: song(5,&quot;rum&quot;); in the main function results in the following
+printout:
+</p>
+<div class="example">
+<pre class="example">Five bottles of rum on the wall.
+
+...
+
+there'd be no bottles of rum on the wall.
+</pre></div>
+
+<p>Question 4.5.8: Once all the code is working, add the following line to
+the main function: song(100,&quot;gin&quot;); so that it prints out the
+following:
+</p>
+<div class="example">
+<pre class="example">One hundred bottles of gin on the wall.
+
+...
+
+there'd be zero bottles of gin on the wall.
+</pre></div>
+
+<p>Question 4.5.9: Write a new function number2string3 that works like
+number2string2 and number2string except that it handles
+numbers up to 999. Internally number2string3 should call
+number2string2. You might find the following function useful:
+</p>
+<div class="example">
+<pre class="example">function String textand(String a, String b)
+begin
+&nbsp;&nbsp;&nbsp; if (a.equals(&quot;&quot;) or b.equals(&quot;&quot;)) then return a + b;
+&nbsp;&nbsp;&nbsp; else return a + &quot; and &quot; + b;
+end
+</pre></div>
+
+<p>Question 4.5.10: Tricky! Write a new function number2string4 that works
+like number2string3 execpt that it handles numbers up to nine hundred
+and ninety-nine million nine hundred and ninety-nine thousand nine
+hundred and ninety-nine, i.e. 999,999,999. The function number2string4
+should internally call number2string3 like so:
+</p>
+<div class="example">
+<pre class="example">var String ones = number2string3(n % 1000);
+var String thousands = number2string3(n / 1000 % 1000);
+var String millions = number2string3(n / 1000 / 1000 % 1000);
+</pre></div>
+
+<p>Note that the variables above will have values from 0 to 999
+inclusive.
+</p>
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Tutorial-6-Class-variables.html#Tutorial-6-Class-variables" accesskey="n" rel="next">Tutorial 6 Class variables</a>, Previous: <a href="Tutorial-4-Four-looping-constructs.html#Tutorial-4-Four-looping-constructs" accesskey="p" rel="prev">Tutorial 4 Four looping constructs</a>, Up: <a href="J_002eT_002eW_002e-Tutorials.html#J_002eT_002eW_002e-Tutorials" accesskey="u" rel="up">J.T.W. Tutorials</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>
