@@ -249,171 +249,290 @@ string containing a long arbitrary name to prevent accidental aliasing
 of the include directives with rest of the comments code.
 
      (let (p1 p2 str form type variable T var start stop step-size step-size-2
-              this_start this_stop this_step this_step_size file line p-prior
-              beg0 end0)
-       ;;(checkpoint "2")
-       (save-excursion
-         ;;(setq parse-sexp-ignore-comments t)
-         (goto-char (point-min))
-         (setq *superfor* 0)
-         (while (re-search-forward "\\<superfor\\>" nil t)
-           (setq beg0 (match-beginning 0))
-           (setq end0 (match-end 0))
-           ;;(checkpoint "sitting for 1 seconds...")
-           (font-lock-fontify-buffer)
-           ;;(sit-for 1)
-           (when (save-excursion
-                   (save-match-data
-                     (re-search-forward "(" (point-at-eol) t)
-                     (forward-char -1)
-                     (re-search-forward "\\<var\\>" nil t)
-                     (not (warn--inside-comment-or-string))))
-             ;;(error "Smelly cat")
-             (setq *current-buffer* (current-buffer))
-             ;;(switch-to-buffer *current-buffer*)
-             (setq p1 beg0)
-             (assert (save-match-data
-                       (looking-at " \t\r\n*(")))
-             (setq p2 (save-excursion
-                        (forward-sexp 1)
-                        (point)))
-             (setq str (buffer-substring-no-properties end0 p2))
-             ;;(checkpoint "str=%s" str)
-             (setq form (read-str str))
-             ;;(checkpoint "form=%s" form)
-             ;;(debug "form")
-             (assert (consp form))
-             ;;(error "Rolling Stones plays Cuba")
-             (delete-region p1 p2)
-             (incf *superfor*)
-             (setq this (format "superfor_%d_" *superfor*))
-             (when (not (eq (nth 0 form) 'var))
-               (warn--log-message "Error 35: Keyword var missing")
-               (when (and (not (eq (nth 0 form) 'char))
-                          (not (eq (nth 0 form) 'short))
-                          (not (eq (nth 0 form) 'int))
-                          (not (eq (nth 0 form) 'long))
-                          (not (eq (nth 0 form) 'float))
-                          (not (eq (nth 0 form) 'double)))
-                 (warn--log-message (concat
-                                     "Error 37:#1 argument type to superfor macro must be"
-                                     " one of char/short/int/long/float/double"))))
-             (when (eq (nth 0 form) 'var)
-               (if (and (not (eq (nth 1 form) 'char))
-                        (not (eq (nth 1 form) 'short))
-                        (not (eq (nth 1 form) 'int))
-                        (not (eq (nth 1 form) 'long))
-                        (not (eq (nth 1 form) 'float))
-                        (not (eq (nth 1 form) 'double)))
-                   (warn--log-message (concat
-                                       "Error 37:#2 argument type to superfor macro must be"
-                                       " one of char/short/int/long/float/double")))
-               (progn
-                 (setq type (nth 1 form))
-                 (setq T (prin1-to-string type))
-                 (setq variable (nth 2 form))
-                 (setq variable-equals (prin1-to-string (nth 2 form)))
-                 (if (string-match "=" variable-equals)
-                     (progn
-                       (setq variable (read-str (substring variable-equals 0 (match-beginning 0))))
-                       (setq start    (read-str (substring variable-equals (match-end 0))))
-                       (if (eq (nth 3 form) 'to)
-                           (setq to 'to)
-                         (if (eq (nth 3 form) 'downto)
-                             (setq to 'downto)
-                           (assert "The Bug")))
-                       (setq stop     (nth 4 form))
-                       (if (eq (nth 5 form) 'step)
-                           (setq step-size (nth 6 form))
-                         ;;(setq step-size 1)
-                         ))
-                   (assert (or (eq (nth 3 form) '=)))
-                   ;;(debug "Joaquin Rodrigo")
-                   (setq start (nth 4 form))
-                   (if (eq (nth 5 form) 'to)
-                       (setq to 'to)
-                     (if (eq (nth 5 form) 'downto)
-                         (setq to 'downto)
-                       (assert "Planet of New Orleans")))
-                   (setq stop (nth 6 form))
-                   (if (eq (nth 7 form) 'step)
-                       (progn
-                         (setq step-size (nth 8 form))
-                         ;;(assert (numberp (nth 8 form)))
-                         )
-                     ;;(setq step-size 1)
-                     )
-                   ))
-               (d-quote
-                (debug "Rocket Queen")
-                (setq type "")
-                (setq T "double")
-                (setq variable (nth 0 form))
-                (assert (eq (nth 1 form) '=))
-                (setq start (nth 2 form))
-                (if (eq (nth 3 form) 'to)
-                    (setq to 'to)
-                  (if (eq (nth 3 form) 'downto)
-                      (setq to 'downto)
-                    (debug "My Michelle")))
-                (setq stop (nth 4 form))
-                (if (eq (nth 5 form) 'step)
-                    (setq step-size (nth 6 form))))
-               (setq var         (prin1-to-string variable))
-               (setq start       (prin1-to-string start))
-               (setq stop        (prin1-to-string stop))
-               (setq step-size-2 (prin1-to-string step-size))
-               (setq start       (warn--splat-quest start))
-               (setq stop        (warn--splat-quest stop))
-               (setq step-size-2 (warn--splat-quest step-size-2))
-                -----------------------------------------------------
-               (setq this_start     (concat this "start"))
-               (setq this_stop      (concat this "stop"))
-               (setq this_step      (concat this "step"))
-               (setq this_step_size (concat this "step_size"))
-               ;;(debug "My Parties")
-               (insert (concat (concat "var " T " " this_start " = " start ";")
-                               (concat "var " T " " this_stop  " = " stop  ";")
-                               (if step-size
-                                   (concat "var " T " " this_step " = " step-size-2 ";"
-                                           "var " T " " this_step_size " = "
-                                           (if (eq to 'to) (concat "Math.abs(" this_step ")") (if (eq to 'downto) (concat "-Math.abs(" this_step ")") (debug "Heavy Fuel"))) ";\n")
-                                 (concat "var " T " " this_step_size " = " (if (eq to 'to) "1" (if (eq to 'downto) "-1" (debug "Ticket to Heaven"))))) ";\n"))
-               (setq line 0)
-               (setq p-prior
-                     (save-excursion
-                       (beginning-of-line)
-                       (setq str (concat "^ \t*//+ " *pp-namespace* " #location0-9"
-                                         " (\\(" *drive-spec* "-a-zA-Z0-9_./+\\):\\(0-9+\\))"))
-                       (if (or (looking-at str) (re-search-backward str nil t))
-                           (progn
-                             ;;(debug "Antonio Vivaldi")
-                             (setq file (buffer-substring-no-properties           (match-beginning 1)
-                                                                                  (match-end 1)))
-                             (assert (stringp file))
-                             (setq line (read-str (buffer-substring-no-properties (match-beginning 3)
-                                                                                  (match-end 3))))
-                             (assert (integerp line))
-                             (point)
+                  this_start this_stop this_step this_step_size file line p-prior
+                  beg0 end0)
+           (setq strobe nil)
+           (checkpoint "2")
+           (save-excursion
+             (goto-char (point-min))
+             (setq *superfor* 0)
+             (while (re-search-forward "\\<superfor\\>" nil t)
+               (setq beg0 (match-beginning 0))
+               (setq end0 (match-end 0))
+               ;;(checkpoint "sitting for 1 seconds...")
+               (font-lock-fontify-buffer)
+               ;;(sit-for 1)
+               (when (save-excursion
+                       (save-match-data
+                         (re-search-forward "(" (point-at-eol) t)
+                         (forward-char -1)
+                         (re-search-forward "\\<var\\>" nil t)
+                         (not (warn--inside-comment-or-string))))
+                 ;;(error "Smelly cat")
+                 (setq *current-buffer* (current-buffer))
+                 ;;(switch-to-buffer *current-buffer*)
+                 (setq p1 beg0)
+                 (assert (save-match-data
+                           (looking-at " \t\r\n*(")))
+                 (setq p2 (save-excursion
+                            (forward-sexp 1)
+                            (point)))
+                 (setq str (buffer-substring-no-properties end0 p2))
+                 ;;(checkpoint "str=%s" str)
+                 (setq form (read-str str))
+                 ;;(checkpoint "form=%s" form)
+                 ;;(debug "form")
+                 (assert (consp form))
+                 (message "*** form=%s" form)
+                 ;;(error "Rolling Stones plays Cuba")
+                 (delete-region p1 p2)
+                 (incf *superfor*)
+                 (setq this (format "superfor_%d_" *superfor*))
+                 (when (not (eq (nth 0 form) 'var))
+                   (warn--log-message "Error 35: Keyword var missing from superfor construct")
+                   (when (and (not (eq (nth 1 form) 'char))
+                              (not (eq (nth 1 form) 'short))
+                              (not (eq (nth 1 form) 'int))
+                              (not (eq (nth 1 form) 'long))
+                              (not (eq (nth 1 form) 'float))
+                              (not (eq (nth 1 form) 'double)))
+                     (warn--log-message (concat
+                                         "Error 37:#1 argument type to superfor macro must be"
+                                         " one of char/short/int/long/float/double"))))
+                 (when (eq (nth 0 form) 'var)
+                   (if (and (not (eq (nth 1 form) 'char))
+                            (not (eq (nth 1 form) 'short))
+                            (not (eq (nth 1 form) 'int))
+                            (not (eq (nth 1 form) 'long))
+                            (not (eq (nth 1 form) 'float))
+                            (not (eq (nth 1 form) 'double)))
+                       (warn--log-message (concat
+                                           "Error 37:#2 argument type to superfor macro must be"
+                                           " one of char/short/int/long/float/double")))
+                   (progn
+                     ;;(debug "Radiohead: Let Down")
+                     ;; (setq form '(var int i=0 to stop))
+                     ;; (setq form '(var int i =0 to stop))
+                     ;; (setq form '(var int i = 0 to stop))
+                     (setq type     (nth 1 form))
+                     (setq T        (prin1-to-string type))
+                     (setq variable (prin1-to-string (nth 2 form)))
+                     (if (string-match "=" variable)
+                         (progn
+                           (setq pre-red-str--variable (substring variable 0 (match-beginning 0)))
+                           ;;(string-match "=" variable-equals)
+                           (setq pre-red-str--start    (substring variable (match-end 0)))
+                           ;;(debug "Radiohead: Fitter Happier")
+                           ;;(debug "Jean Jarre: Equinoxe Part III")
+                           (setq variable (and (not (string= "" pre-red-str--variable))
+                                               (prin1-to-string (read-str pre-red-str--variable))))
+                           (setq start (and (not (string= "" pre-red-str--start))
+                                            (prin1-to-string (read-str pre-red-str--start))))
+                           (cond
+                            ((eq (nth 3 form) nil)
+                             (setq start (concat start "()"))
+                             (setq strobe t)
+                             (debug "Queen: One Vision")
+                             (cond
+                              ((eq (nth 4 form) 'to)
+                               (setq to 'to))
+                              ((eq (nth 4 form) 'downto)
+                               (setq to 'downto))
+                              (t
+                               (debug "Pretenders: Space Invader")))
+                             (setq stop (prin1-to-string (nth 5 form)))
+                             (cond
+                              ((and (eq (nth 6 form) nil) (> (length form) 6))
+                               (setq stop (concat stop "()"))
+                               ;;(debug "The Pretenders: Kid")
+                               (if (eq (nth 7 form) 'step)
+                                   (setq step-size (nth 8 form))))
+                              ((string-match "(" (prin1-to-string (nth 6 form)))
+                               (setq stop (concat stop (and (nth 6 form) (prin1-to-string (nth 6 form)))))
+                               (if (eq (nth 7 form) 'step)
+                                   (setq step-size (nth 8 form))))
+                              ((eq (nth 6 form) 'step)
+                               (debug "Pretenders: Private Life")
+                               (setq step-size (nth 7 form)))
+                              (t
+                               ;;(debug "Queen: It's a Kind of Magic")
+                               )
+                              ) ;; end COND!
+                             (if strobe (debug "Queen: One Year of Love"))
                              )
-                         (setq file (concat default-directory *stump* ".jtw"))
-                         (setq line 1)
-                         (goto-char (point-min))
-                         (forward-line 2)
-                         (point)
-                         )))
-               (setq line (+ line (count-lines p-prior (point))))
-               (decf line)
-               (decf line)
-               (insert (format "// %s (setq file-stack '%s)\n" *list-namespace* (prin1-to-string file-stack)))
-               (insert (format "// %s #location3 (%s:%d)\n" *pp-namespace* file line))
-               (insert (concat "for (var " T " " var " = " this_start ";"
-                               " ((" this_step_size " > 0) ? " var " <= "
-                               this_stop " : " var " >= " this_stop "); "
-                               var " += " this_step_size ")"))
-               ;;(debug "Yehudi Menuhin")
-               )))))
-     )
+                            ((string-match "(" (prin1-to-string (nth 3 form)))
+                             ;;(debug "Public Enemy: Letter to the New York Post")
+                             (setq start (and (nth 3 form) (concat start (prin1-to-string (nth 3 form)))))
+                             (cond
+                              ((eq (nth 4 form) 'to)
+                               (setq to 'to))
+                              ((eq (nth 4 form) 'downto)
+                               (setq to 'downto))
+                              (t
+                               (debug "Elvis: King Creole")))
+                             (setq stop (prin1-to-string (nth 5 form)))
+                             (cond
+                              ((and (eq (nth 6 form) nil) (> (length form) 6))
+                               (setq stop (concat stop "()"))
+                               ;;(debug "The Pretenders: Kid")
+                               (if (eq (nth 7 form) 'step)
+                                   (setq step-size (nth 8 form))))
+                              ;; ------------------------------------------
+                              ((string-match "(" (prin1-to-string (nth 6 form)))
+                               (setq stop (concat stop (prin1-to-string (nth 6 form))))
+                               (if (eq (nth 7 form) 'step)
+                                   (setq step-size (nth 8 form))))
+                              ;; ------------------------------------------
+                              ((eq (nth 6 form) 'step)
+                               (debug "Pretenders: Private Life")
+                               (setq step-size (nth 7 form)))
+                              (t
+                               ;;(debug "Queen: It's a Kind of Magic")
+                               )
+                              )
+                             ((eq (nth 3 form) 'to)
+                              (setq to 'to)
+                              (setq stop (nth 4 form))
+                              (if (eq (nth 5 form) 'step)
+                                  (setq step-size (nth 6 form))
+                                )
+                              ;;(debug "aaa")
+                              )
+                             ((eq (nth 3 form) 'downto)
+                              (setq to 'downto)
+                              (setq stop (nth 4 form))
+                              (if (eq (nth 5 form) 'step)
+                                  (setq step-size (nth 6 form))
+                                )
+                              (debug "bbb")
+                              )
+                             (t
+                              (debug "Dire Straits: The Bug")))
+                            )
+                           ;;(debug "Bach's Mass in B Minor: Et in terra pax")
+                           )
+                       (if (eq (nth 3 form) '=)
+                           (setq start (and (nth 4 form) (prin1-to-string (nth 4 form))))
+                         (setq   start (and (nth 3 form) (prin1-to-string (nth 3 form))))
+                         )) ;; end if!
+                     ;;(debug "Bach's Mass in B Minor: Kyrie eleison")
+                     (cond
+                      ((eq (nth 3 form) 'to)
+                       (setq to 'to)
+                       (setq stop (prin1-to-string (nth 4 form)))
+                       (if (and (eq (nth 5 form) nil) (> (length form) 5))
+                           (setq stop (concat stop "()"))
+                         (if (string-match "(" (prin1-to-string (nth 5 form)))
+                             (setq stop (concat stop (prin1-to-string (nth 5 form))))
+                           (if (eq (nth 5 form) 'step)
+                               (setq step-size (prin1-to-string (nth 6 form))))))
+                       )
+                      ((eq (nth 3 form) 'downto)
+                       (setq to 'downto)
+                       (setq stop (prin1-to-string (nth 4 form)))
+                       (if (and (eq (nth 5 form) nil) (> (length form) 5))
+                           (setq stop (concat stop "()"))
+                         (if (string-match "(" (prin1-to-string (nth 5 form)))
+                             (setq stop (concat stop (prin1-to-string (nth 5 form))))
+                           (if (eq (nth 5 form) 'step)
+                               (setq step-size (prin1-to-string (nth 6 form))))))
+                       )
+                      (t
+                       ;;(debug "Jean Michel Jarre: Oxygene III")))
+                       ;;(debug "Joaquin Rodrigo")
+                       (setq start (prin1-to-string (nth 4 form)))
+                       (cond
+                        ((eq (nth 5 form) 'to)
+                         (setq to 'to))
+                        ((eq (nth 5 form) 'downto)
+                         (setq to 'downto))
+                        (t
+                         (debug "Dire Straits: Planet of New Orleans")))
+                       (setq stop (prin1-to-string (nth 6 form)))
+                       (if (eq (nth 7 form) 'step)
+                           (progn
+                             (setq step-size (and (nth 8 form) (prin1-to-string (nth 8 form))))
+                             (assert (numberp (nth 8 form)))
+                             )
+                         )
+                       )
+                      )
+                     )
+                   ;;(debug "Rod Stewart's Maggie May")
+                   (progn
+                     (setq var         variable)
+                     (setq start-2     (warn--cull-quotes (warn--splat-quest start)))
+                     (setq stop-2      (warn--cull-quotes (warn--splat-quest stop)))
+                     (setq step-size-2 (warn--splat-quest (and step-size (prin1-to-string step-size))))
+                     ) ;; end PROGN!
+                   ;; -----------------------------------------------------
+                   ;;(debug "The Pretenders: Precious")
+                   (setq this_start     (concat this "start"))
+                   (setq this_stop      (concat this "stop"))
+                   (setq this_step      (concat this "step"))
+                   (setq this_step_size (concat this "step_size"))
+                   ;;(debug "My Parties")
+                   (insert (concat (concat "var " T " " this_start " = " start-2 "; ")
+                                   (concat "var " T " " this_stop  " = " stop-2  "; ")
+                                   (if step-size
+                                       (concat "var " T " " this_step " = " step-size-2 "; "
+                                               "var " T " " this_step_size " = "
+                                               (cond
+                                                ((eq to 'to)
+                                                 (concat "Math.abs(" this_step ")"))
+                                                ((eq to 'downto)
+                                                 (concat "-Math.abs(" this_step ")"))
+                                                (t
+                                                 (debug "Dire Straits: Heavy Fuel")))
+                                               ";\n")
+                                     (concat "var " T " " this_step_size " = "
+                                             (cond
+                                              ((eq to 'to)
+                                               "1")
+                                              ((eq to 'downto)
+                                               "-1")
+                                              (t
+                                               (debug "Dire Straits: Ticket to Heaven")))
+                                             ) ;; end CONCAT!
+                                     )         ;; end if!
+                                   ";\n")      ;; end CONCAT!
+                           )                   ;; end INSERT!
+                   ;;(debug "Rod Stewart: Hot Legs")
+                   (setq line 0)
+                   (setq p-prior
+                         (save-excursion
+                           (beginning-of-line)
+                           (setq str (concat "^ \t*//+ " *pp-namespace* " #location0-9"
+                                             " (\\("       *drive-spec*   "-a-zA-Z0-9_./+\\):\\(0-9+\\))"))
+                           (if (or (looking-at str) (re-search-backward str nil t))
+                               (progn
+                                 ;;(debug "Antonio Vivaldi")
+                                 (setq file (buffer-substring-no-properties           (match-beginning 1)
+                                                                                      (match-end 1)))
+                                 (assert (stringp file))
+                                 (setq line (read-str (buffer-substring-no-properties (match-beginning 3)
+                                                                                      (match-end 3))))
+                                 (assert (integerp line))
+                                 (point)
+                                 )
+                             (setq file (concat *def-dir* *stump* ".jtw"))
+                             (setq line 1)
+                             (goto-char (point-min))
+                             (forward-line 2)
+                             (point)
+                             )))
+                   (setq line (+ line (count-lines p-prior (point))))
+                   (decf line)
+                   (decf line)
+                   (insert (format "// %s (setq file-stack '%s)\n" *list-namespace* (prin1-to-string file-stack)))
+                   (insert (format "// %s #location3 (%s:%d)\n"    *pp-namespace*   file line))
+                   (insert (concat "for (var " T " " var " = " this_start ";"
+                                   " ((" this_step_size " > 0) ? " var " <= "
+                                   this_stop " : " var " >= " this_stop "); "
+                                   var " += " this_step_size ")"))
+                   (if strobe (debug "Pretenders: The Wait"))
+                   ;;(debug "Yehudi Menuhin")
+                   )))))
 
 2.2 A bug in J.T.W. superfor
 ============================
@@ -572,7 +691,7 @@ following Website <http://davin.50webs.com/J.T.W/download-links.html>
 for the programs that you need to have installed before you can do any
 coding in J.T.W. You should then download a tarball (also known as a
 compressed archive file):
-<http://davinpearson.com/binaries/java-training-wheels-1.1.tar.gz>
+<http://davinpearson.com/binaries/java-training-wheels.tar.gz>
 containing the code you need to get started.  Then unzip the tarball and
 change directory to java-training-wheels and issue the following command
 on GNU/Linux systems: ./configure or on MS Windows systems: bash
@@ -4503,302 +4622,302 @@ Index
 * Menu:
 
 * "Hello, World!":                       Tutorial 1 Your first program.
-                                                             (line  652)
+                                                             (line  771)
 * ~/jtw-tutorials:                       Tutorial 1 Your first program.
-                                                             (line  626)
+                                                             (line  745)
 * A common design pattern: private properties, public constructor and public getters: Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2618)
+                                                             (line 2737)
 * A simple syntax for the main function.: About GNU Java Training Wheels.
                                                              (line  108)
 * A tarball to get you started:          Tutorial 1 Your first program.
-                                                             (line  626)
+                                                             (line  745)
 * About GNU Java Training Wheels:        About GNU Java Training Wheels.
                                                              (line   62)
 * Accessing class variables and functions from another class: Tutorial 8 Accessing functions and class variables from another class.
-                                                             (line 2219)
+                                                             (line 2338)
 * and construct from BASIC and C++ in J.T.W.: About GNU Java Training Wheels.
                                                              (line  118)
 * Arrays:                                Tutorial 7 Non-Object arrays.
-                                                             (line 1618)
+                                                             (line 1737)
 * Arrays <1>:                            Tutorial 10 Object arrays.
-                                                             (line 2884)
+                                                             (line 3003)
 * Arrays <2>:                            Tutorial 17 Arrays inheritance and polymorphism.
-                                                             (line 4587)
+                                                             (line 4706)
 * Arrays of non-Object type, first initialization syntax: Tutorial 7 Non-Object arrays.
-                                                             (line 1621)
+                                                             (line 1740)
 * Arrays of non-Object type, second initialization syntax: Tutorial 7 Non-Object arrays.
-                                                             (line 1682)
+                                                             (line 1801)
 * Arrays of non-Object type, single-dimensional: Tutorial 7 Non-Object arrays.
-                                                             (line 1618)
+                                                             (line 1737)
 * Arrays of non-Object type, three-dimensional: Tutorial 7 Non-Object arrays.
-                                                             (line 1813)
+                                                             (line 1932)
 * Arrays of non-Object type, two-dimensional: Tutorial 7 Non-Object arrays.
-                                                             (line 1741)
+                                                             (line 1860)
 * Arrays of Object type:                 Tutorial 17 Arrays inheritance and polymorphism.
-                                                             (line 4587)
+                                                             (line 4706)
 * Arrays of Object type, first initialization syntax: Tutorial 10 Object arrays.
-                                                             (line 2934)
+                                                             (line 3053)
 * Arrays of Object type, initialization: Tutorial 10 Object arrays.
-                                                             (line 2934)
+                                                             (line 3053)
 * Arrays of Object type, second initialization syntax: Tutorial 10 Object arrays.
-                                                             (line 2973)
+                                                             (line 3092)
 * Arrays of Object type, single-dimensional: Tutorial 10 Object arrays.
-                                                             (line 2884)
+                                                             (line 3003)
 * Arrays of Object type, three-dimensional: Tutorial 10 Object arrays.
-                                                             (line 3129)
+                                                             (line 3248)
 * Arrays of Object type, two-dimensional: Tutorial 10 Object arrays.
-                                                             (line 3034)
+                                                             (line 3153)
 * BASIC style and and or constructs rather than Java's cumbersome && || constructs.: About GNU Java Training Wheels.
                                                              (line  118)
 * Beer drinking song:                    Tutorial 5 A beer drinking song.
-                                                             (line 1330)
+                                                             (line 1449)
 * Building a collection of classes:      How to build a collection of class files or an entire package.
-                                                             (line 5122)
+                                                             (line 5241)
 * Building code that uses a class:       Tutorial 1 Your first program.
-                                                             (line  670)
+                                                             (line  789)
 * Building code that uses a package:     How to build a collection of class files or an entire package.
-                                                             (line 5122)
+                                                             (line 5241)
 * C++ style and and or constructs rather than Java's cumbersome && || constructs.: About GNU Java Training Wheels.
                                                              (line  118)
 * Calling existing methods of the String class: Tutorial 2 Introduction to programming in Java.
-                                                             (line  897)
+                                                             (line 1016)
 * Character.toUpperCase:                 Tutorial 2 Introduction to programming in Java.
-                                                             (line  821)
+                                                             (line  940)
 * chars, introducing:                    Tutorial 2 Introduction to programming in Java.
-                                                             (line  821)
+                                                             (line  940)
 * Class variables from another class, accessing: Tutorial 8 Accessing functions and class variables from another class.
-                                                             (line 2219)
+                                                             (line 2338)
 * classVar construct:                    About GNU Java Training Wheels.
                                                              (line  113)
 * Collection of classes, building:       How to build a collection of class files or an entire package.
-                                                             (line 5122)
+                                                             (line 5241)
 * Comments harvested by Javadoc:         Tutorial 1 Your first program.
-                                                             (line  774)
+                                                             (line  893)
 * constructor construct:                 About GNU Java Training Wheels.
                                                              (line  113)
 * Converting from functions to methods and vice-versa: Tutorial 12 Overloading methods.
-                                                             (line 3420)
+                                                             (line 3539)
 * Davin Pearson's Personal Website <http://davin.50webs.com>: J.T.W. Tutorials.
-                                                             (line  613)
+                                                             (line  732)
 * Davin's jtw-mode.el, a major mode for editing *.jtw files: Tutorial 1 Your first program.
-                                                             (line  644)
+                                                             (line  763)
 * Davin's version of Emacs dlisp.tar.gz: Tutorial 1 Your first program.
-                                                             (line  644)
+                                                             (line  763)
 * Design pattern: private properties, public constructor and public getters: Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2618)
+                                                             (line 2737)
 * dlisp.tar.gz, Davin's version of GNU Emacs: Tutorial 1 Your first program.
-                                                             (line  644)
+                                                             (line  763)
 * do ... while loop:                     Tutorial 4 Four looping constructs.
-                                                             (line 1296)
+                                                             (line 1415)
 * elseif construct rather than else if:  About GNU Java Training Wheels.
                                                              (line  121)
 * Encapsulation:                         Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2621)
+                                                             (line 2740)
 * File inclusion in J.T.W.:              About GNU Java Training Wheels.
                                                              (line  128)
 * First initialization syntax for arrays of non-Object type: Tutorial 7 Non-Object arrays.
-                                                             (line 1621)
+                                                             (line 1740)
 * First initialization syntax for arrays of Objects: Tutorial 10 Object arrays.
-                                                             (line 2934)
+                                                             (line 3053)
 * for loop:                              Tutorial 4 Four looping constructs.
-                                                             (line 1296)
+                                                             (line 1415)
 * function construct:                    About GNU Java Training Wheels.
                                                              (line  113)
 * Function name overloading:             Tutorial 7 Non-Object arrays.
-                                                             (line 1775)
+                                                             (line 1894)
 * Functions to methods and vice-versa:   Tutorial 12 Overloading methods.
-                                                             (line 3420)
+                                                             (line 3539)
 * Functions, parameters and arguments:   Tutorial 1 Your first program.
-                                                             (line  708)
+                                                             (line  827)
 * Getter and setter methods:             Tutorial 15 Introducing inheritance.
-                                                             (line 4032)
+                                                             (line 4151)
 * Hello, World!:                         Tutorial 1 Your first program.
-                                                             (line  652)
+                                                             (line  771)
 * How to access class variables and functions from another class: Tutorial 8 Accessing functions and class variables from another class.
-                                                             (line 2219)
+                                                             (line 2338)
 * Ignoring the return values of functions and methods.: Tutorial 1 Your first program.
-                                                             (line  761)
+                                                             (line  880)
 * Inheritance:                           Tutorial 15 Introducing inheritance.
-                                                             (line 3854)
+                                                             (line 3973)
 * Inheritance and removing duplication of code.: Tutorial 16 More inheritance.
-                                                             (line 4129)
+                                                             (line 4248)
 * Installing Davin's jtw-mode:           Tutorial 1 Your first program.
-                                                             (line  644)
+                                                             (line  763)
 * Installing Davin's version of Emacs dlisp.tar.gz: Tutorial 1 Your first program.
-                                                             (line  644)
+                                                             (line  763)
 * instanceof keyword:                    Tutorial 15 Introducing inheritance.
-                                                             (line 4088)
+                                                             (line 4207)
 * Internal details of the J.T.W. system: Mapping J.T.W. to Java.
-                                                             (line 4632)
+                                                             (line 4751)
 * Introducing boolean arrays:            Tutorial 8 Accessing functions and class variables from another class.
-                                                             (line 2162)
+                                                             (line 2281)
 * Introducing chars:                     Tutorial 2 Introduction to programming in Java.
-                                                             (line  821)
+                                                             (line  940)
 * Introducing class variables:           Tutorial 6 Class variables.
-                                                             (line 1534)
+                                                             (line 1653)
 * Introducing non-Object arrays:         Tutorial 7 Non-Object arrays.
-                                                             (line 1618)
+                                                             (line 1737)
 * Introducing single-dimensional non-Object arrays: Tutorial 7 Non-Object arrays.
-                                                             (line 1618)
+                                                             (line 1737)
 * Introducing the superfor construct:    Tutorial 3 superfor loops and for loops.
-                                                             (line  954)
+                                                             (line 1073)
 * Introducing the System.out.print construct: Tutorial 3 superfor loops and for loops.
-                                                             (line  954)
+                                                             (line 1073)
 * Introducing the System.out.println construct: Tutorial 3 superfor loops and for loops.
-                                                             (line  954)
+                                                             (line 1073)
 * Introducing while loops do ... while loops: Tutorial 4 Four looping constructs.
-                                                             (line 1296)
+                                                             (line 1415)
 * J.T.W. -> Java mapping:                About GNU Java Training Wheels.
                                                              (line   80)
 * J.T.W. internal details:               Mapping J.T.W. to Java.
-                                                             (line 4632)
+                                                             (line 4751)
 * Javadoc, harvesting of comments:       Tutorial 1 Your first program.
-                                                             (line  774)
+                                                             (line  893)
 * jtw-mode.el Davin's major mode for editing *.jtw files: Tutorial 1 Your first program.
-                                                             (line  644)
+                                                             (line  763)
 * Linked lists:                          J.T.W. Tutorials.   (line    0)
 * Linked lists <1>:                      Tutorial 14 Linked lists.
-                                                             (line 3664)
+                                                             (line 3783)
 * main function, a simple syntax for.:   About GNU Java Training Wheels.
                                                              (line  108)
 * make build X.run to build and run a class file.: Tutorial 1 Your first program.
-                                                             (line  670)
+                                                             (line  789)
 * Makefile for generating *.class files from *.jtw files: Makefile for building *.jtw into *.java and running *.class files.
-                                                             (line 4731)
+                                                             (line 4850)
 * Mapping from *.jtw -> *.java:          Mapping J.T.W. to Java.
-                                                             (line 4632)
+                                                             (line 4751)
 * Mapping from class variables -> instance variables (also known as properties): Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2522)
+                                                             (line 2641)
 * Mapping from functions -> methods:     Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2522)
+                                                             (line 2641)
 * Mapping from J.T.W. -> Java:           About GNU Java Training Wheels.
                                                              (line   80)
 * method construct:                      About GNU Java Training Wheels.
                                                              (line  113)
 * Methods to functions and vice-versa:   Tutorial 12 Overloading methods.
-                                                             (line 3420)
+                                                             (line 3539)
 * Methods, overloading:                  Tutorial 12 Overloading methods.
-                                                             (line 3413)
+                                                             (line 3532)
 * My first program:                      Tutorial 1 Your first program.
-                                                             (line  652)
+                                                             (line  771)
 * Non-Object arrays, single-dimensional: Tutorial 7 Non-Object arrays.
-                                                             (line 1617)
+                                                             (line 1736)
 * Non-Object arrays, two-dimensional:    Tutorial 7 Non-Object arrays.
-                                                             (line 1741)
+                                                             (line 1860)
 * null value for references:             Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2797)
+                                                             (line 2916)
 * NullPointerException:                  Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2810)
+                                                             (line 2929)
 * Object arrays:                         Tutorial 10 Object arrays.
-                                                             (line 2884)
+                                                             (line 3003)
 * Object arrays, two-dimensional:        Tutorial 10 Object arrays.
-                                                             (line 3034)
+                                                             (line 3153)
 * Object superclass of all objects:      Tutorial 15 Introducing inheritance.
-                                                             (line 4105)
+                                                             (line 4224)
 * or construct from BASIC and C++ in J.T.W.: About GNU Java Training Wheels.
                                                              (line  118)
 * Overloading methods:                   Tutorial 12 Overloading methods.
-                                                             (line 3413)
+                                                             (line 3532)
 * Packages, building:                    How to build a collection of class files or an entire package.
-                                                             (line 5122)
+                                                             (line 5241)
 * Packages, importing:                   Importing a package.
-                                                             (line 5017)
+                                                             (line 5136)
 * Packages, moving a class into a package: Moving a class into a package.
-                                                             (line 4793)
+                                                             (line 4912)
 * Pascal-style begin ... end construct versus the C-style { ... } construct: About GNU Java Training Wheels.
                                                              (line  104)
 * Piping the output of javac and java:   Piping the output of javac and java.
-                                                             (line 4720)
+                                                             (line 4839)
 * Polymorphism:                          Tutorial 17 Arrays inheritance and polymorphism.
-                                                             (line 4579)
+                                                             (line 4698)
 * Polymorphism versus run-time type inquiry: Tutorial 17 Arrays inheritance and polymorphism.
-                                                             (line 4622)
+                                                             (line 4741)
 * private properties, public constructor and public getters, a common design pattern: Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2617)
+                                                             (line 2736)
 * Problematic J.T.W. constructs, trouble-shooting: About GNU Java Training Wheels.
                                                              (line   75)
 * property construct:                    About GNU Java Training Wheels.
                                                              (line  113)
 * Property swapping:                     Tutorial 12 Overloading methods.
-                                                             (line 3423)
+                                                             (line 3542)
 * Relationships between different classes.: Tutorial 11 References to another class.
-                                                             (line 3143)
+                                                             (line 3262)
 * Return values:                         Tutorial 1 Your first program.
-                                                             (line  731)
+                                                             (line  850)
 * Run-time type inquiry versus Polymorphism: Tutorial 17 Arrays inheritance and polymorphism.
-                                                             (line 4622)
+                                                             (line 4741)
 * Second initialization syntax for arrays of non-Objects: Tutorial 7 Non-Object arrays.
-                                                             (line 1682)
+                                                             (line 1801)
 * Second initialization syntax for arrays of Objects: Tutorial 10 Object arrays.
-                                                             (line 2973)
+                                                             (line 3092)
 * Setter and getter methods:             Tutorial 15 Introducing inheritance.
-                                                             (line 4032)
+                                                             (line 4151)
 * Setting up relationships between different classes.: Tutorial 11 References to another class.
-                                                             (line 3143)
+                                                             (line 3262)
 * Single-dimensional arrays of Objects:  Tutorial 10 Object arrays.
-                                                             (line 2883)
+                                                             (line 3002)
 * superfor construct, Introducing:       Tutorial 3 superfor loops and for loops.
-                                                             (line  954)
+                                                             (line 1073)
 * superfor looping construct:            J.T.W. Proof of concept #1 A superfor macro.
                                                              (line  141)
 * superfor macro:                        About GNU Java Training Wheels.
                                                              (line  124)
 * Swapping the properties of two objects: Tutorial 12 Overloading methods.
-                                                             (line 3423)
+                                                             (line 3542)
 * System.out.print construct, introducing: Tutorial 3 superfor loops and for loops.
-                                                             (line  954)
+                                                             (line 1073)
 * System.out.println construct, introducing: Tutorial 3 superfor loops and for loops.
-                                                             (line  954)
+                                                             (line 1073)
 * System.out.println(/* args */);:       Tutorial 1 Your first program.
-                                                             (line  693)
+                                                             (line  812)
 * The best of the four looping constructs superfor, for, while and do ... while: Tutorial 4 Four looping constructs.
-                                                             (line 1323)
+                                                             (line 1442)
 * The Delphi/Pascal/JavaScript keyword var for clearer local variables: About GNU Java Training Wheels.
                                                              (line  116)
 * The difference between == and =:       Tutorial 2 Introduction to programming in Java.
-                                                             (line  845)
+                                                             (line  964)
 * The Pascal/BASIC keyword then for clearer if statements: About GNU Java Training Wheels.
                                                              (line  116)
 * The toString method and its usefulness in debugging.: Tutorial 15 Introducing inheritance.
-                                                             (line 4119)
+                                                             (line 4238)
 * The toString method.:                  Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2805)
+                                                             (line 2924)
 * then for clearer if statements:        About GNU Java Training Wheels.
                                                              (line  116)
 * Three-dimensional arrays of Objects:   Tutorial 10 Object arrays.
-                                                             (line 3129)
+                                                             (line 3248)
 * Three-dimensional non-Object arrays:   Tutorial 7 Non-Object arrays.
-                                                             (line 1813)
+                                                             (line 1932)
 * toLowerCase() of the String class:     Tutorial 2 Introduction to programming in Java.
-                                                             (line  941)
+                                                             (line 1060)
 * toString method.:                      Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2804)
+                                                             (line 2923)
 * toUpperCase() of the String class:     Tutorial 2 Introduction to programming in Java.
-                                                             (line  942)
+                                                             (line 1061)
 * Trouble-shooting problematic J.T.W. constructs: About GNU Java Training Wheels.
                                                              (line   75)
 * Two-dimensional arrays of Objects:     Tutorial 10 Object arrays.
-                                                             (line 3034)
+                                                             (line 3153)
 * Two-dimensional non-Object arrays:     Tutorial 7 Non-Object arrays.
-                                                             (line 1741)
+                                                             (line 1860)
 * var for clearer local variables:       About GNU Java Training Wheels.
                                                              (line  116)
 * while loop:                            Tutorial 4 Four looping constructs.
-                                                             (line 1296)
+                                                             (line 1415)
 * Why it is better to use polymorphism rather than run-time type inquiry: Tutorial 17 Arrays inheritance and polymorphism.
-                                                             (line 4621)
+                                                             (line 4740)
 * Why the toString method is better than any other method or property for debugging your code: Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2866)
+                                                             (line 2985)
 * Writing your own classes:              Tutorial 15 Introducing inheritance.
-                                                             (line 3985)
+                                                             (line 4104)
 * Writing your own classes <1>:          Tutorial 17 Arrays inheritance and polymorphism.
-                                                             (line 4574)
+                                                             (line 4693)
 * Writing your own methods:              Tutorial 9 Mapping class variables to instance variables (also known as properties) and functions to methods.
-                                                             (line 2870)
+                                                             (line 2989)
 * Yertle the Turtle:                     Tutorial 14 Linked lists.
-                                                             (line 3664)
+                                                             (line 3783)
 * Your first J.T.W. program:             Tutorial 1 Your first program.
-                                                             (line  652)
+                                                             (line  771)
 * Your first program:                    Tutorial 1 Your first program.
-                                                             (line  652)
+                                                             (line  771)
 
